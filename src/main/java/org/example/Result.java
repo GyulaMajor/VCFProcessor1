@@ -1,16 +1,16 @@
 package org.example;
 
-public class Eredmeny {
+public class Result {
     String transcript, hgvsc, variantType;
     int count = 1;
 
-    Eredmeny(String transcript, String hgvsc, String variant) {
+    Result(String transcript, String hgvsc, String variant) {
         this.transcript = transcript;
         this.hgvsc = hgvsc;
         this.variantType = variant;
     }
 
-    Eredmeny inc() {
+    Result increment() {
         count++;
         return this;
     }
