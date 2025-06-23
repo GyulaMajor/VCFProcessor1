@@ -12,28 +12,31 @@ import java.util.Objects;
 
 public class VCFProcessor {
     public static void main(String[] args) throws IOException {
-        if (args.length < 1) {
-            System.out.println("Adjon meg egy könyvtárat");
+        if(args.length < 2){
+            System.out.println("Adjon meg egy bemeneti és egy kimeneti könyvtárat");
             return;
         }
+        File bemenetiKonyvtar = new File(args[0]);
+        File kimenet = new File(args[1]);
 
-        File konyvtar = new File(args[0]);
-
-        if (!konyvtar.isDirectory()) {
-            System.out.println(args[0] + "nem egy könyvtár");
+        if (!bemenetiKonyvtar.isDirectory()) {
+            System.out.println("Az input könyvtár nem található: " + bemenetiKonyvtar.getAbsolutePath());
             return;
         }
 
         Map<String, Eredmeny> map = new HashMap<>();
 
-        for (File file : Objects.requireNonNull(konyvtar.listFiles((d, name) -> name.endsWith(".vcf")))) {
+        for (File file : Objects.requireNonNull(bemenetiKonyvtar.listFiles((d, name) -> name.endsWith(".vcf")))) {
             processFile(file, map);
         }
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("out.csv"))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(kimenet))) {
             writer.write("TRANSCRIPT;HGVS.C;VARIANT_TYPE;TOTAL_COUNT\n");
             for (Eredmeny e : map.values())
                 writer.write(e.toString());
+        }
+        catch (IOException e){
+            System.err.println("Kimeneti fájl hiba");
         }
     }
 
